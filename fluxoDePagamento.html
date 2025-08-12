@@ -2,43 +2,40 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluxo_pagamento</title>
 </head>
 <body>
-    <div id="simulador-pagamento" style="max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
-  <h2 style="text-align: center; background: rgb(9, 9, 9); color: white; padding: 10px; border-radius: 5px;">
-    FLUXO DE PAGAMENTO
-  </h2>
+   <div id="simulador-pagamento" style="max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
+      <h2 style="text-align: center; background: rgb(9, 9, 9); color: white; padding: 10px; border-radius: 5px;">
+          FLUXO DE PAGAMENTO
+      </h2>
 
-  <!-- Entradas -->
-  <div style="background: #f4f4f4; padding: 15px; border-radius: 5px;">
-    <label>Valor do Imóvel (R$):</label>
-    <input type="number" id="valorTotal" value="355503.24" style="width: 100%; padding: 5px; margin-bottom: 10px;">
+       <!-- Entradas -->
+      <div style="background: #f4f4f4; padding: 15px; border-radius: 5px;">
+        <label>Valor do Imóvel (R$):</label>
+        <input type="number" id="valorTotal" value="" style="width: 100%; padding: 5px; margin-bottom: 10px;">
 
-    <label>Percentuais (%):</label>
-    <table style="width: 100%; border-collapse: collapse;">
-      <tr><td>Ato</td><td><input type="number" id="percAto" value="5.99" style="width: 100%"></td></tr>
-      <tr><td>Sinal</td><td><input type="number" id="percSinal" value="4.00" style="width: 100%"></td></tr>
-      <tr><td>Mensais</td><td><input type="number" id="percMensais" value="6.89" style="width: 100%"></td></tr>
-      <tr><td>Anual</td><td><input type="number" id="percAnual" value="1.37" style="width: 100%"></td></tr>
-      <tr><td>Única</td><td><input type="number" id="percUnica" value="3.73" style="width: 100%"></td></tr>
-      <tr><td>Financiamento</td><td><input type="number" id="percFin" value="78.03" style="width: 100%"></td></tr>
-    </table>
-    <button onclick="calcularFluxo()" style="margin-top: 10px; padding: 10px; background: steelblue; color: white; border: none; border-radius: 5px; cursor: pointer;">
-      Calcular
-    </button>
-  </div>
+        <table>
+        <tr><th>Etapa</th><th>Parcelas</th><th>%</th></tr>
+        <tr><td>Ato</td>                      <td>1</td>  <td><input type="number" id="percAto" oninput="atualizarTotalPerc()" style="width: 100%"></td></tr>
+        <tr><td>Sinal</td>                    <td>1</td>  <td><input type="number" id="percSinal" oninput="atualizarTotalPerc()" style="width: 100%"></td></tr>
+        <tr><td>Mensais</td>                  <td>1</td>  <td><input type="number" id="percMensais" oninput="atualizarTotalPerc()" style="width: 100%"></td> </tr>
+        <tr><td>Anual</td>                    <td>1</td>  <td><input type="number" id="percAnual" oninput="atualizarTotalPerc()" style="width: 100%"></td></tr>
+        <tr><td>Única</td>                    <td>1</td>  <td><input type="number" id="percUnica" oninput="atualizarTotalPerc()" style="width: 100%"></td></tr>
+        <tr><td>Financiamento</td>            <td>1</td>  <td><input type="number" id="percFin" oninput="atualizarTotalPerc()" style="width: 100%"></td></tr>
+        <tr><td><strong>Total %</strong></td> <td>1</td>  <td colspan="2"><span id="totalPerc">0%</span></td></tr>
+        </table>
+    
+        <button onclick="calcularFluxo()" style="margin-top: 10px; padding: 10px; background: steelblue; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          Calcular
+        </button>
+      </div>
 
   <!-- Resultados -->
   <h3 style="margin-top: 20px;">Resultado:</h3>
   <table border="1" width="100%" style="border-collapse: collapse; text-align: center;">
     <thead style="background: steelblue; color: white;">
-      <tr>
-        <th>Parcela</th>
-        <th>%</th>
-        <th>Valor (R$)</th>
-      </tr>
+      <tr><th>ETAPA</th> <th>PARCELAS</th> <th>VALOR PARCELA</th> <th>SUBTOTAL</th></tr>
     </thead>
     <tbody id="resultado"></tbody>
     <tfoot>
@@ -48,10 +45,11 @@
       </tr>
     </tfoot>
   </table>
-</div>
+   </div>
 
 <script>
 function calcularFluxo() {
+
   let valorTotal = parseFloat(document.getElementById("valorTotal").value);
   let parcelas = [
     { nome: "Ato", perc: parseFloat(document.getElementById("percAto").value) },
@@ -70,14 +68,41 @@ function calcularFluxo() {
     total += valor;
     tbody += `<tr>
                 <td>${p.nome}</td>
+                <td> </td>
                 <td>${p.perc.toFixed(2)}%</td>
                 <td>R$ ${valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
               </tr>`;
   });
 
-  document.getElementById("resultado").innerHTML = tbody;
+  document.getElementById("resultado") .innerHTML = tbody;
   document.getElementById("totalValor").innerHTML = "R$ " + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
 }
+
+function atualizarTotalPerc() {
+  let totalPerc = 0;
+  totalPerc += parseFloat(document.getElementById("percAto").value)     || 0;
+  totalPerc += parseFloat(document.getElementById("percSinal").value)   || 0;
+  totalPerc += parseFloat(document.getElementById("percMensais").value) || 0;
+  totalPerc += parseFloat(document.getElementById("percAnual").value)   || 0;
+  totalPerc += parseFloat(document.getElementById("percUnica").value)   || 0;
+  totalPerc += parseFloat(document.getElementById("percFin").value)     || 0;
+
+  // Texto Atualizado
+  document.getElementById("totalPerc").innerText = totalPerc.toFixed(2) + "%";
+
+  // if para mudar cor
+  if (totalPerc > 100) {
+    document.getElementById("totalPerc").style.color = "red";
+  } else {
+    document.getElementById("totalPerc").style.color = "black";
+  }
+}
+
+
+
+
+
+
 
 // Calcula ao carregar a página
 calcularFluxo();
