@@ -2,138 +2,207 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Fluxo_pagamento</title>
+    <title>Fluxo de Pagamento</title>
+
     <style>
         #simulador-pagamento { max-width: 800px; margin: auto; font-family: Arial, sans-serif; }
-        .titulo-principal { text-align: center; background: rgb(9, 9, 9); color: white; padding: 10px; border-radius: 5px; }
-        .bloco-entradas { background: #f4f4f4; padding: 15px; border-radius: 5px; }
+        .titulo-principal { text-align: center; background: rgb(4, 40, 70); color: white; padding: 10px; border-radius: 5px; }
+        .bloco-entradas { background: #f4f4f4; padding: 15px; border-radius: 5px; margin-top: 15px; }
+        .tabela-entradas { width: 100%; }
         .tabela-entradas td { padding: 4px; }
-        .tabela-entradas input[type="text"], .tabela-entradas input[type="number"] { width: 100%; box-sizing: border-box; }
-        .tabela-entradas input.qnt-input { width: 60px; }
+        .tabela-entradas input[type="text"], .tabela-entradas input[type="number"] { width: 100%; box-sizing: border-box; padding: 5px; }
+        .tabela-entradas input.qnt-input { width: 80px; }
         #totalPerc.invalido { color: red; font-weight: bold; }
         #totalPerc.valido { color: green; font-weight: bold; }
-        .botao-principal { margin-top: 10px; padding: 10px; background: steelblue; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
-        .botao-principal:hover { background: #3a7299; }
+        .botao-principal { margin-top: 10px; padding: 10px; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; transition: background-color 0.2s; }
+        .botao-principal:hover:not(:disabled) { opacity: 0.9; }
         .botao-principal:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .btn-calcular { background-color: rgb(4, 40, 70); }
+        .btn-pdf { background-color: #d9534f; }
         .tabela-resultado { border-collapse: collapse; text-align: center; width: 100%; }
         .tabela-resultado th, .tabela-resultado td { border: 1px solid #ddd; padding: 8px; }
-        .tabela-resultado thead { background: steelblue; color: white; }
+        .tabela-resultado thead { background: rgb(4, 40, 70); color: white; }
         .tabela-resultado tfoot tr { background: lightgreen; font-weight: bold; }
+        #resumo-empreendimento { padding: 10px; background: #e9e9e9; border-radius: 5px; margin-bottom: 15px; line-height: 1.5; }
+        #resumo-empreendimento p { margin: 4px 0; }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
 </head>
 <body>
-    <div id="simulador-pagamento">
-        <h2 class="titulo-principal">FLUXO DE PAGAMENTO</h2>
 
-        <div class="bloco-entradas">
-            <table class="tabela-entradas">
-                <tr><td>Nome Empreendimento:</td><td><input type="text" id="nomeEmpreendimento"></td></tr>
-                <tr><td>Tipo Unidade:</td><td><input type="text" id="tipoUnidade"></td></tr>
-                <tr><td>Área Privativa (m²):</td><td><input type="text" id="areaPrivativa"></td></tr>
-            </table>
-            <hr style="margin: 15px 0;">
-            <label>Valor do Imóvel (R$):</label>
-            <input type="number" id="valorTotal" placeholder="Digite o valor total" style="width: 100%; padding: 5px; margin-bottom: 10px;">
-            <table class="tabela-entradas">
-                <tr><th>Etapa</th><th>Parcelas</th><th>%</th></tr>
-                <tr class="linha-etapa" data-etapa="Ato"><td>Ato</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
-                <tr class="linha-etapa" data-etapa="Sinal"><td>Sinal</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
-                <tr class="linha-etapa" data-etapa="Mensais"><td>Mensais</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
-                <tr class="linha-etapa" data-etapa="Anual"><td>Anual</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
-                <tr class="linha-etapa" data-etapa="Unica"><td>Única</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
-                <tr class="linha-etapa" data-etapa="Fin"><td>Financiamento</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
-                <tr><td><strong>Total %</strong></td><td></td><td><span id="totalPerc">0.00%</span></td></tr>
-            </table>
-            <button id="btn-calcular" class="botao-principal">Calcular</button>
-        </div>
+<div id="simulador-pagamento">
+    <h2 class="titulo-principal">FLUXO DE PAGAMENTO</h2>
 
-        <h3 style="margin-top: 20px;">Resultado:</h3>
-        <div id="resumo-empreendimento" style="padding: 10px; background: #e9e9e9; border-radius: 5px; margin-bottom: 15px; display: none;"></div>
-        <table class="tabela-resultado">
-            <thead>
-                <tr><th>PARCELAS</th><th>QTDE</th><th>VALOR PARCELA</th><th>SUBTOTAL</th></tr>
-            </thead>
-            <tbody id="resultado"></tbody>
-            <tfoot>
-                <tr><td colspan="3">Total</td><td id="totalValor">R$ 0,00</td></tr>
-            </tfoot>
+    <div class="bloco-entradas">
+        <table class="tabela-entradas">
+            <tr><td>Nome Empreendimento:</td><td><input type="text" id="nomeEmpreendimento"></td></tr>
+            <tr><td>Tipo Unidade:</td><td><input type="text" id="tipoUnidade"></td></tr>
+            <tr><td>Área Privativa (m²):</td><td><input type="text" id="areaPrivativa"></td></tr>
         </table>
+        <hr style="margin: 15px 0;">
+        <label>Valor do Imóvel (R$):</label>
+        <input type="number" id="valorTotal" placeholder="Digite o valor total" style="width: 100%; padding: 5px; margin-bottom: 10px;">
+        <table class="tabela-entradas">
+            <tr><th>Etapa</th><th>Parcelas</th><th>%</th></tr>
+            <tr class="linha-etapa" data-etapa="Ato"><td>Ato</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
+            <tr class="linha-etapa" data-etapa="Sinal"><td>Sinal</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
+            <tr class="linha-etapa" data-etapa="Mensais"><td>Mensais</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
+            <tr class="linha-etapa" data-etapa="Anual"><td>Anual</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
+            <tr class="linha-etapa" data-etapa="Unica"><td>Única</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
+            <tr class="linha-etapa" data-etapa="Financiamento"><td>Financiamento</td><td><input type="number" class="qnt-input"></td><td><input type="number" class="perc-input"></td></tr>
+            <tr><td><strong>Total %</strong></td><td></td><td><span id="totalPerc">0.00%</span></td></tr>
+        </table>
+        <button id="btn-calcular" class="botao-principal btn-calcular">Calcular</button>
+        <button id="btn-gerar-pdf" class="botao-principal btn-pdf">Gerar PDF</button>
     </div>
 
-    <script>
-        const btnCalcular = document.getElementById('btn-calcular');
+    <h3 style="margin-top: 20px;">Resultado:</h3>
+    <div id="resumo-empreendimento" style="display: none;"></div>
+    <table class="tabela-resultado">
+        <thead>
+            <tr><th>PARCELAS</th><th>QTDE</th><th>VALOR PARCELA</th><th>SUBTOTAL</th></tr>
+        </thead>
+        <tbody id="resultado"></tbody>
+        <tfoot>
+            <tr><td colspan="3">Total</td><td id="totalValor">R$ 0,00</td></tr>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+    
+    function atualizarTotalPerc() {
         const spanTotalPerc = document.getElementById('totalPerc');
+        const btnCalcular = document.getElementById('btn-calcular');
+        let totalPerc = 0;
+        document.querySelectorAll('.perc-input').forEach(input => {
+            totalPerc += parseFloat(input.value) || 0;
+        });
+        if (spanTotalPerc) {
+            spanTotalPerc.innerText = totalPerc.toFixed(2) + "%";
+            const isTotal100 = totalPerc.toFixed(2) === '100.00';
+            spanTotalPerc.className = isTotal100 ? 'valido' : 'invalido';
+        }
+        if (btnCalcular) {
+            const isTotal100 = totalPerc.toFixed(2) === '100.00';
+            btnCalcular.disabled = !isTotal100;
+        }
+    }
+
+    function calcularFluxo() {
         const inputValorTotal = document.getElementById('valorTotal');
         const linhasEtapa = document.querySelectorAll('.linha-etapa');
         const resultadoBody = document.getElementById('resultado');
         const totalValorFooter = document.getElementById('totalValor');
-
-        function atualizarTotalPerc() {
-            let totalPerc = 0;
-            document.querySelectorAll('.perc-input').forEach(input => {
-                totalPerc += parseFloat(input.value) || 0;
-            });
-            spanTotalPerc.innerText = totalPerc.toFixed(2) + "%";
-            const isTotal100 = totalPerc.toFixed(2) === '100.00';
-            spanTotalPerc.className = isTotal100 ? 'valido' : 'invalido';
-            btnCalcular.disabled = !isTotal100;
+        const nomeEmp = document.getElementById('nomeEmpreendimento').value;
+        const tipoUni = document.getElementById('tipoUnidade').value;
+        const areaPri = document.getElementById('areaPrivativa').value;
+        const resumoContainer = document.getElementById('resumo-empreendimento');
+        const valorTotal = parseFloat(inputValorTotal.value) || 0;
+        const areaPrivativaNumerica = parseFloat(areaPri) || 0;
+        let precoM2Texto = 'Não aplicável';
+        if (valorTotal > 0 && areaPrivativaNumerica > 0) {
+            const precoM2 = valorTotal / areaPrivativaNumerica;
+            precoM2Texto = precoM2.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
-
-        function calcularFluxo() {
-            const nomeEmp = document.getElementById('nomeEmpreendimento').value;
-            const tipoUni = document.getElementById('tipoUnidade').value;
-            const areaPri = document.getElementById('areaPrivativa').value;
-            const resumoContainer = document.getElementById('resumo-empreendimento');
-            const valorTotal = parseFloat(inputValorTotal.value) || 0;
-
-            const areaPrivativaNumerica = parseFloat(areaPri) || 0;
-            let precoM2Texto = 'Não aplicável';
-            if (valorTotal > 0 && areaPrivativaNumerica > 0) {
-                const precoM2 = valorTotal / areaPrivativaNumerica;
-                precoM2Texto = precoM2.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            }
-
-            if (nomeEmp || tipoUni || areaPri) {
-                resumoContainer.innerHTML = `
-                    <p style="margin: 2px 0;"><strong>Empreendimento:</strong> ${nomeEmp || 'Não informado'}</p>
-                    <p style="margin: 2px 0;"><strong>Unidade:</strong> ${tipoUni || 'Não informado'}</p>
-                    <p style="margin: 2px 0;"><strong>Área Privativa:</strong> ${areaPri ? areaPri + ' m²' : 'Não informado'}</p>
-                    <p style="margin: 2px 0;"><strong>Preço por m²:</strong> ${precoM2Texto}</p>
-                `;
-                resumoContainer.style.display = 'block';
-            } else {
-                resumoContainer.style.display = 'none';
-            }
-            
-            let corpoTabelaHTML = "";
-            let totalGeralCalculado = 0;
-            linhasEtapa.forEach(linha => {
-                const nomeEtapa = linha.dataset.etapa;
-                const perc = parseFloat(linha.querySelector('.perc-input').value) || 0;
-                const qtde = parseInt(linha.querySelector('.qnt-input').value) || 0;
-                if (perc > 0) {
-                    const subtotal = (perc / 100) * valorTotal;
-                    const valorParcela = qtde > 0 ? subtotal / qtde : subtotal;
-                    totalGeralCalculado += subtotal;
-                    corpoTabelaHTML += `<tr>
-                        <td>${nomeEtapa}</td>
-                        <td>${qtde || 1}</td>
-                        <td>R$ ${valorParcela.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                        <td>R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    </tr>`;
-                }
-            });
-            resultadoBody.innerHTML = corpoTabelaHTML;
-            totalValorFooter.innerHTML = "<strong>" + totalGeralCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + "</strong>";
+        if (nomeEmp || tipoUni || areaPri) {
+            resumoContainer.innerHTML = `<p><strong>Empreendimento:</strong> ${nomeEmp || 'Não informado'}</p><p><strong>Unidade:</strong> ${tipoUni || 'Não informado'}</p><p><strong>Área Privativa:</strong> ${areaPri ? areaPri + ' m²' : 'Não informado'}</p><p><strong>Preço por m²:</strong> ${precoM2Texto}</p>`;
+            resumoContainer.style.display = 'block';
+        } else {
+            resumoContainer.style.display = 'none';
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            btnCalcular.addEventListener('click', calcularFluxo);
-            document.querySelectorAll('.perc-input, .qnt-input, #valorTotal, #areaPrivativa').forEach(input => {
-                input.addEventListener('input', atualizarTotalPerc);
-            });
-            atualizarTotalPerc();
+        let corpoTabelaHTML = "";
+        let totalGeralCalculado = 0;
+        linhasEtapa.forEach(linha => {
+            const nomeEtapa = linha.dataset.etapa;
+            const perc = parseFloat(linha.querySelector('.perc-input').value) || 0;
+            const qtde = parseInt(linha.querySelector('.qnt-input').value) || 0;
+            if (perc > 0) {
+                const subtotal = (perc / 100) * valorTotal;
+                const valorParcela = qtde > 0 ? subtotal / qtde : subtotal;
+                totalGeralCalculado += subtotal;
+                corpoTabelaHTML += `<tr><td>${nomeEtapa}</td><td>${qtde || 1}</td><td>R$ ${valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td><td>R$ ${subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td></tr>`;
+            }
         });
-    </script>
+        resultadoBody.innerHTML = corpoTabelaHTML;
+        totalValorFooter.innerHTML = "<strong>" + totalGeralCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + "</strong>";
+    }
+
+    async function gerarPdfClientSide() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        try {
+            const logoUrl = 'https://i.imgur.com/BcWPfEr.png';
+            const respostaLogo = await fetch(logoUrl);
+            const logoBlob = await respostaLogo.blob();
+            const logoBase64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(logoBlob);
+            });
+            doc.addImage(logoBase64, 'PNG', 110, 25, 75, 15); // X , Y, A, B
+            // 
+
+        } catch (error) {
+            console.error("Erro ao carregar o logo. O PDF será gerado sem ele.", error);
+        }
+        const nomeEmp = document.getElementById('nomeEmpreendimento').value;
+        const tipoUni = document.getElementById('tipoUnidade').value;
+        const areaPri = document.getElementById('areaPrivativa').value;
+        const valorTotal = parseFloat(document.getElementById('valorTotal').value) || 0;
+        doc.setFontSize(18);
+        doc.text("Proposta de Pagamento", 14, 22);
+        doc.setFontSize(11);
+        doc.text(`Empreendimento: ${nomeEmp || 'Não informado'}`, 14, 32);
+        doc.text(`Unidade: ${tipoUni || 'Não informado'}`, 14, 38);
+        doc.text(`Área Privativa: ${areaPri ? areaPri + ' m²' : 'Não informado'}`, 14, 44);
+        const areaNum = parseFloat(areaPri) || 0;
+        if (valorTotal > 0 && areaNum > 0) {
+            const precoM2 = (valorTotal / areaNum).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            doc.text(`Preço por m²: ${precoM2}`, 14, 50);
+        }
+        const tabelaHead = [["PARCELAS", "QTDE", "VALOR PARCELA", "SUBTOTAL"]];
+        const tabelaBody = [];
+        const linhasResultado = document.getElementById('resultado').rows;
+        for (let i = 0; i < linhasResultado.length; i++) {
+            tabelaBody.push([
+                linhasResultado[i].cells[0].innerText,
+                linhasResultado[i].cells[1].innerText,
+                linhasResultado[i].cells[2].innerText,
+                linhasResultado[i].cells[3].innerText
+            ]);
+        }
+        doc.autoTable({
+            head: tabelaHead, body: tabelaBody, startY: 60, theme: 'grid', headStyles: { fillColor: [4, 40, 70] }
+        });
+        const finalY = doc.lastAutoTable.finalY;
+        const totalGeralTexto = document.getElementById('totalValor').innerText;
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold", "");
+        doc.text(`Valor no Fluxo: ${totalGeralTexto}`, 14, finalY + 10);
+        doc.save(`Fluxo de Pagamento- ${nomeEmp || 'simulacao'}.pdf`);
+    }
+
+    // INICIALIZAÇÃO DOS EVENTOS
+    setTimeout(function() {
+        const btnCalcular = document.getElementById('btn-calcular');
+        if (btnCalcular) {
+            btnCalcular.addEventListener('click', calcularFluxo);
+        }
+        const btnGerarPdf = document.getElementById('btn-gerar-pdf');
+        if (btnGerarPdf) {
+            btnGerarPdf.addEventListener('click', gerarPdfClientSide);
+        }
+        document.querySelectorAll('.perc-input, .qnt-input, #valorTotal, #areaPrivativa').forEach(input => {
+            input.addEventListener('input', atualizarTotalPerc);
+        });
+        atualizarTotalPerc();
+    }, 500);
+</script>
+
 </body>
 </html>
