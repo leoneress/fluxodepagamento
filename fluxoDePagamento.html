@@ -11,220 +11,197 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     
-  <style>
-    /* --- FUNDO E TIPOGRAFIA BASE --- */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-body {
-    background-color: #1a1a1a;
-    color: #f0f0f0;
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 15px;
-}
-
-/* --- CONTAINER PRINCIPAL --- */
-#simulador-pagamento {
-    max-width: 700px;
-    margin: auto;
-    background-color: #2c2c2c;
-    border-radius: 12px;
-    padding: 30px;
-    border: 1px solid #444;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* --- TÍTULOS --- */
-.titulo-principal {
-    text-align: center;
-    background: transparent;
-    color: #ffffff;
-    padding: 0;
-    margin-bottom: 30px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    border-bottom: 1px solid #00aaff;
-    padding-bottom: 15px;
-}
-
-h3 {
-    font-weight: 600;
-    color: #00aaff;
-    margin-top: 40px;
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-}
-
-/* --- ESTILO DOS INPUTS E CAMPOS --- */
-.tabela-entradas {
-    width: 100%;
-    border-spacing: 0 15px;
-}
-.tabela-entradas td {
-    padding: 4px 8px;
-    vertical-align: middle;
-}
-.tabela-entradas tr {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.tabela-entradas tr td:first-child {
-    width: 30%;
-    font-weight: 600;
-    color: #ccc;
-}
-.tabela-entradas tr td:last-child {
-    width: 70%;
-}
-input[type="text"], input[type="number"], input[type="date"] {
-    background-color: #3a3a3a;
-    color: #f0f0f0;
-    border: 1px solid #555;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 15px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
-    outline: none;
-    border-color: #00aaff;
-    box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2);
-}
-
-/* --- BOTÕES --- */
-.grupo-botoes {
-    display: flex;
-    gap: 15px;
-    margin-top: 25px;
-}
-.botao-principal {
-    flex: 1;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 8px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-}
-.botao-principal:hover:not(:disabled) {
-    transform: translateY(-2px);
-}
-.botao-principal:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-.btn-calcular { background-color: #00aaff; }
-.btn-pdf { background-color: #d9534f; }
-.btn-copiar { background-color: #0275d8; }
-
-
-/* --- TABELA DE RESULTADOS --- */
-.tabela-resultado {
-    border-collapse: collapse;
-    text-align: center;
-    width: 100%;
-    margin-top: 20px;
-}
-.tabela-resultado th, .tabela-resultado td {
-    border: 1px solid #444;
-    padding: 12px;
-}
-.tabela-resultado thead {
-    background-color: #333;
-    color: #00aaff;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-.tabela-resultado tbody tr:nth-child(even) {
-    background-color: #2c2c2c;
-}
-.tabela-resultado tfoot tr {
-    background: #00aaff;
-    color: #1a1a1a;
-    font-weight: bold;
-}
-
-/* --- RESUMO DO EMPREENDIMENTO --- */
-#resumo-empreendimento {
-    background: #3a3a3a;
-    border-left: 4px solid #00aaff;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-/* --- CORES DE VALIDAÇÃO --- */
-#totalPerc.invalido { color: red; font-weight: bold; }
-#totalPerc.valido { color: #5cb85c; font-weight: bold; }
-
-/* --- REGRAS DE RESPONSIVIDADE PARA TELEMÓVEIS --- */
-@media (max-width: 768px) {
-    body {
-        padding: 10px; /* Menos padding no body */
-    }
-    #simulador-pagamento {
+<style>
+    body { 
+        background-color: #1a1a1a; 
+        color: #f0f0f0; 
+        font-family: 'Poppins', sans-serif; 
+        margin: 0; 
         padding: 15px;
+        font-size: 15px;
     }
-    .tabela-entradas tr {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: 10px;
-        gap: 5px; /* Espaço entre label e input */
+    
+    #simulador-pagamento { 
+        max-width: 550px;
+        margin: auto; 
+        background-color: #2c2c2c; 
+        border-radius: 12px; 
+        padding: 25px;
+        border: 1px solid #444; 
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
     }
-    .tabela-entradas tr td:first-child,
-    .tabela-entradas tr td:last-child {
-        width: 100%;
-        padding: 0;
+    
+    .titulo-principal { 
+        text-align: center; 
+        background: transparent; 
+        color: #ffffff; 
+        padding: 0; 
+        margin-bottom: 25px;
+        font-weight: 600; 
+        letter-spacing: 1px; 
+        border-bottom: 1px solid #3098D9; 
+        padding-bottom: 10px;
     }
-    .grupo-botoes {
-        flex-direction: column;
+    
+    h3 { 
+         font-weight: 600;
+         color: #3098D9; 
+         margin-top: 30px;
+         border-bottom: 1px solid #444; 
+         padding-bottom: 8px;
+     }
+
+    fieldset {
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
-    .tabela-wrapper {
-        overflow-x: auto; /* Adiciona a barra de rolagem horizontal */
+    legend {
+        font-weight: 600;
+        color: #3098D9;
+        padding: 0 10px;
     }
-    .tabela-resultado th, .tabela-resultado td {
-        font-size: 14px;
+    
+    .tabela-entradas { 
+        width: 100%; 
+        border-spacing: 0 12px;
+    }
+    
+    .tabela-entradas td { padding: 2px 6px; vertical-align: middle; }
+    .tabela-entradas tr { display: flex; align-items: center; justify-content: space-between; }
+    .tabela-entradas tr td:first-child { width: 35%; font-weight: 600; color: #ccc; font-size: 13px; }
+    .tabela-entradas tr td:last-child { width: 65%; }
+    
+    input[type="text"], input[type="number"], input[type="date"] { 
+        background-color: #3a3a3a; 
+        color: #f0f0f0; 
+        border: 1px solid #555; 
+        border-radius: 6px;
         padding: 8px;
+        font-size: 14px;
+        width: 100%; 
+        box-sizing: border-box; 
+        transition: border-color 0.3s, box-shadow 0.3s; 
     }
-}
-   
+    
+    input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus { outline: none; border-color: #00aaff; box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.2); }
+    
+    .grupo-botoes { 
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 20px; 
+    }
+
+    #btn-salvar-negocio { font: color= #1D3557;
+
+    }
+    
+    
+
+    #btn-calcular {
+        grid-column: 1 / -1; /* Botão de calcular ocupa a primeira linha inteira */
+    }
+    
+    .botao-principal { 
+        padding: 10px;
+        font-size: 15px;
+        font-weight: 600; 
+        border-radius: 8px; 
+        border: none; 
+        color: white; 
+        cursor: pointer; 
+        transition: transform 0.2s, background-color 0.2s; 
+    }
+    
+    .botao-principal:hover:not(:disabled) { transform: translateY(-2px); }
+    .botao-principal:disabled { background-color: #666; color: #aaa; cursor: not-allowed; }
+    .btn-calcular { background-color: #3098D9; }
+    .btn-pdf { background-color: #1E3859; }
+    .btn-copiar { background-color: #1E3859; }
+    .btn-salvar { background-color: #82D9D0; grid-column: 1 / -1; font-size: 16px; padding: 12px;  color: #1D3557;}
+    
+    .tabela-resultado { border-collapse: collapse; text-align: center; width: 100%; margin-top: 20px; }
+    .tabela-resultado th, .tabela-resultado td { border: 1px solid #444; padding: 10px; }
+    .tabela-resultado thead { background-color: #333; color: #3098D9; font-weight: 600; text-transform: uppercase; }
+    .tabela-resultado tbody tr:nth-child(even) { background-color: #2c2c2c; }
+    .tabela-resultado tfoot tr { background: #3098D9; color: #1a1a1a; font-weight: bold; }
+    
+    #resumo-empreendimento { background: #3a3a3a; border-left: 4px solid #3098D9; padding: 15px; border-radius: 8px; }
+    #totalPerc.invalido { color: red; font-weight: bold; }
+    #totalPerc.valido { color: #5cb85c; font-weight: bold; }
+
+    .notificacao-popup {
+        position: fixed;
+        bottom: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 25px;
+        border-radius: 8px;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 1000;
+        transition: bottom 0.5s ease-in-out;
+    }
+    .notificacao-popup.show {
+        bottom: 30px;
+    }
+    .notificacao-popup.success { background-color: #5cb85c; }
+    .notificacao-popup.error { background-color: #d9534f; }
+    
+    @media (max-width: 768px) {
+        body { padding: 10px; }
+        #simulador-pagamento { padding: 15px; }
+        .tabela-entradas tr { flex-direction: column; align-items: flex-start; margin-bottom: 10px; gap: 5px; }
+        .tabela-entradas tr td:first-child, .tabela-entradas tr td:last-child { width: 100%; padding: 0; }
+        .grupo-botoes { grid-template-columns: 1fr; }
+        .tabela-wrapper { overflow-x: auto; }
+        .tabela-resultado th, .tabela-resultado td { font-size: 14px; padding: 8px; }
+    }
 </style>
 
 </head>
 <body>
-  
+ 
 <div id="simulador-pagamento">
-    <h2 class="titulo-principal">FLUXO DE PAGAMENTO</h2>
+    <h2 class="titulo-principal">SIMULAÇÃO DE FLUXO DE PAGAMENTO</h2>
     <div class="bloco-entradas">
-        <table class="tabela-entradas">
-            <tr><td>Nome Empreendimento:</td><td><input type="text" id="nomeEmpreendimento" placeholder="Obrigatório"></td></tr>
-            <tr><td>Tipo Unidade:</td><td><input type="text" id="tipoUnidade" placeholder="Obrigatório"></td></tr>
-            <tr><td>Área Privativa (m²):</td><td><input type="text" id="areaPrivativa" placeholder="Obrigatório"> </td></tr>
-            <tr><td>Nome do Cliente:</td><td><input type="text" id="nomeCliente" placeholder="Opcional"></td></tr>
-            <tr><td>Data da Proposta:</td><td><input type="date" id="dataProposta"></td></tr>
-            <tr><td>Executivo(a):</td><td><input type="text" id="nomeExecutivo" placeholder="Opcional"></td></tr>
-        </table>
-        <hr style="border-color: #444; margin: 20px 0;">
-        <label>Valor do Imóvel (R$):</label>
-        <input type="number" id="valorTotal" placeholder="Digite o valor total" style="margin-top: 10px; margin-bottom: 10px;">
-        <table class="tabela-entradas">
-            <tr><th>Etapa</th><th>Parcelas</th><th>%</th><th></th><th></th></tr>
-            <tr class="linha-etapa" data-etapa="Ato"><td>Ato</td><td><input type="number" class="qnt-input" placeholder="Parcelas"></td><td><input type="number" class="perc-input" placeholder="Porcentagem"></td></tr>
-            <tr class="linha-etapa" data-etapa="Sinal"><td>Sinal</td><td><input type="number" class="qnt-input" placeholder="Parcelas"></td><td><input type="number" class="perc-input" placeholder="Porcentagem"></td></tr>
-            <tr class="linha-etapa" data-etapa="Mensais"><td>Mensais</td><td><input type="number" class="qnt-input" placeholder="Parcelas"></td><td><input type="number" class="perc-input" placeholder="Porcentagem"></td></tr>
-            <tr class="linha-etapa" data-etapa="Anual"><td>Anual</td><td><input type="number" class="qnt-input" placeholder="Parcelas"></td><td><input type="number" class="perc-input" placeholder="Porcentagem"></td></tr>
-            <tr class="linha-etapa" data-etapa="Unica"><td>Única</td><td><input type="number" class="qnt-input" placeholder="Parcelas"></td><td><input type="number" class="perc-input" placeholder="Porcentagem"></td></tr>
-            <tr class="linha-etapa" data-etapa="Financiamento"><td>Financiamento</td><td><input type="number" class="qnt-input" placeholder="Parcelas"></td><td><input type="number" class="perc-input" placeholder="Porcentagem"></td></tr>
-            <tr><td><strong>Total %</strong></td><td></td><td><span id="totalPerc">0.00%</span></td></tr>
-        </table>
+        <fieldset>
+            <legend>Dados da Proposta</legend>
+            <table class="tabela-entradas">
+                <tr><td>Nome Empreendimento:</td><td><input type="text" id="nomeEmpreendimento" placeholder="Obrigatório"></td></tr>
+                <tr><td>Tipo Unidade:</td><td><input type="text" id="tipoUnidade" placeholder="Obrigatório"></td></tr>
+                <tr><td>Área Privativa (m²):</td><td><input type="text" id="areaPrivativa" placeholder="Obrigatório"></td></tr>
+                <tr><td>Nome do Cliente:</td><td><input type="text" id="nomeCliente" placeholder="Opcional"></td></tr>
+                <tr><td>Data da Proposta:</td><td><input type="date" id="dataProposta"></td></tr>
+                <tr><td>Executivo(a):</td><td><input type="text" id="nomeExecutivo" placeholder="Opcional"></td></tr>
+                <tr><td><strong>ID do Negócio (Bitrix24):</strong></td><td><input type="number" id="bitrixDealId" placeholder="ID numérico do negócio"></td></tr>
+            </table>
+        </fieldset>
+
+        <fieldset>
+            <legend>Valores e Parcelas</legend>
+            <label for="valorTotal">Valor do Imóvel (R$):</label>
+            <input type="number" id="valorTotal" placeholder="Digite o valor total" style="margin-top: 10px; margin-bottom: 10px; width: 100%;">
+            <table class="tabela-entradas">
+                <tr><th>Etapa</th><th>Parcelas</th><th></th><th></th><th>%</th></tr>
+                <tr class="linha-etapa" data-etapa="Ato"><td>Ato</td><td><input type="number" class="qnt-input" placeholder="Qtde"></td><td><input type="number" class="perc-input" placeholder="%"></td></tr>
+                <tr class="linha-etapa" data-etapa="Sinal"><td>Sinal</td><td><input type="number" class="qnt-input" placeholder="Qtde"></td><td><input type="number" class="perc-input" placeholder="%"></td></tr>
+                <tr class="linha-etapa" data-etapa="Mensais"><td>Mensais</td><td><input type="number" class="qnt-input" placeholder="Qtde"></td><td><input type="number" class="perc-input" placeholder="%"></td></tr>
+                <tr class="linha-etapa" data-etapa="Anual"><td>Anual</td><td><input type="number" class="qnt-input" placeholder="Qtde"></td><td><input type="number" class="perc-input" placeholder="%"></td></tr>
+                <tr class="linha-etapa" data-etapa="Unica"><td>Única</td><td><input type="number" class="qnt-input" placeholder="Qtde"></td><td><input type="number" class="perc-input" placeholder="%"></td></tr>
+                <tr class="linha-etapa" data-etapa="Financiamento"><td>Financiamento</td><td><input type="number" class="qnt-input" placeholder="Qtde"></td><td><input type="number" class="perc-input" placeholder="%"></td></tr>
+                <tr><td><strong>Total %</strong></td><td></td><td><span id="totalPerc">0.00%</span></td></tr>
+            </table>
+        </fieldset>
+        
         <div class="grupo-botoes">
             <button id="btn-calcular" class="botao-principal btn-calcular">Calcular</button>
-            <button id="btn-gerar-pdf" class="botao-principal btn-pdf">Gerar PDF</button>
             <button id="btn-copiar-texto" class="botao-principal btn-copiar">Copiar Texto</button>
+            <button id="btn-gerar-pdf" class="botao-principal btn-pdf">Download PDF</button>
+            <button id="btn-salvar-negocio" class="botao-principal btn-salvar">Salvar PDF no Negócio</button>
         </div>
     </div>
     <h3 style="margin-top: 20px;">Resultado:</h3>
@@ -242,7 +219,18 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
     </div>
 </div>
 
+<div id="notificacao" class="notificacao-popup"></div>
+
 <script>
+    function mostrarNotificacao(mensagem, tipo = 'success') {
+        const popup = document.getElementById('notificacao');
+        popup.textContent = mensagem;
+        popup.className = `notificacao-popup ${tipo} show`;
+        setTimeout(() => {
+            popup.className = 'notificacao-popup';
+        }, 3000);
+    }
+
     function obterDadosCalculados() {
         const valorTotal = parseFloat(document.getElementById('valorTotal').value) || 0;
         const areaPri = document.getElementById('areaPrivativa').value;
@@ -266,14 +254,13 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
         document.querySelectorAll('.linha-etapa').forEach(linha => {
             const perc = parseFloat(linha.querySelector('.perc-input').value) || 0;
             if (perc > 0) {
-                const qtde = parseInt(linha.querySelector('.qnt-input').value) || 0;
+                const qtde = parseInt(linha.querySelector('.qnt-input').value) || 1;
                 const subtotal = (perc / 100) * valorTotal;
-                const valorParcela = qtde > 0 ? subtotal / qtde : 0;
                 dados.totalGeral += subtotal;
                 dados.parcelas.push({
                     nome: linha.dataset.etapa,
-                    qtde: qtde || 1,
-                    valorParcela: valorParcela,
+                    qtde: qtde,
+                    valorParcela: subtotal / qtde,
                     subtotal: subtotal
                 });
             }
@@ -281,7 +268,8 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
         return dados;
     }
 
-    function renderizarResultadosHTML(dados) {
+    function renderizarResultados() {
+        const dados = obterDadosCalculados();
         const resumoContainer = document.getElementById('resumo-empreendimento');
         const resultadoBody = document.getElementById('resultado');
         const totalValorFooter = document.getElementById('totalValor');
@@ -293,70 +281,30 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
         }
         let corpoTabelaHTML = "";
         dados.parcelas.forEach(p => {
-            corpoTabelaHTML += `<tr><td>${p.nome}</td><td>${p.qtde}</td><td>R$ ${p.valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td><td>R$ ${p.subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td></tr>`;
+            corpoTabelaHTML += `<tr><td>${p.nome}</td><td>${p.qtde}</td><td>${p.valorParcela.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td><td>${p.subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td></tr>`;
         });
         resultadoBody.innerHTML = corpoTabelaHTML;
-        totalValorFooter.innerHTML = "<strong>" + dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + "</strong>";
+        totalValorFooter.innerHTML = `<strong>${dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>`;
     }
 
-    function calcularFluxo() {
-        const dadosCalculados = obterDadosCalculados();
-        renderizarResultadosHTML(dadosCalculados);
+    function atualizarTotalPerc() {
+        const spanTotalPerc = document.getElementById('totalPerc');
+        const btnCalcular = document.getElementById('btn-calcular');
+        let totalPerc = 0;
+        document.querySelectorAll('.perc-input').forEach(input => {
+            totalPerc += parseFloat(input.value) || 0;
+        });
+        if (spanTotalPerc) {
+            spanTotalPerc.textContent = totalPerc.toFixed(2) + "%";
+            const isTotal100 = totalPerc.toFixed(2) === '100.00';
+            spanTotalPerc.className = isTotal100 ? 'valido' : 'invalido';
+        }
+        if (btnCalcular) {
+            btnCalcular.disabled = !isTotal100;
+        }
     }
 
-    function copiarTextoProposta() {
-        const dados = obterDadosCalculados();
-        if (dados.totalGeral === 0) {
-            alert("Por favor, calcule um fluxo de pagamento antes de copiar.");
-            return;
-        }
-        let textoParaCopiar = `Cliente: ${dados.nomeCliente || ''}\n\n`;
-        textoParaCopiar += `Empreendimento: ${dados.nomeEmpreendimento}\n`;
-        textoParaCopiar += `Unidade: ${dados.tipoUnidade}\n`;
-        textoParaCopiar += `Área Privativa: ${dados.areaPrivativa} m²\n`;
-        textoParaCopiar += `Preço por m²: ${dados.precoM2Texto}\n\n`;
-        textoParaCopiar += `PARCELAS\tQTDE\tVALOR PARCELA\tSUBTOTAL\n`;
-        dados.parcelas.forEach(p => {
-            const valorParcelaFmt = `R$ ${p.valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-            const subtotalFmt = `R$ ${p.subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-            textoParaCopiar += `${p.nome}\t${p.qtde}\t${valorParcelaFmt}\t${subtotalFmt}\n`;
-        });
-        const totalGeralFmt = dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        textoParaCopiar += `Total\t\t\t${totalGeralFmt}\n`;
-        const btnCopiar = document.getElementById('btn-copiar-texto');
-        navigator.clipboard.writeText(textoParaCopiar).then(() => {
-            const textoOriginal = btnCopiar.innerText;
-            btnCopiar.innerText = 'Copiado com Sucesso!';
-            btnCopiar.style.backgroundColor = '#5cb85c';
-            setTimeout(() => {
-                btnCopiar.innerText = "Copiar Texto";
-                btnCopiar.style.backgroundColor = '#0275d8';
-            }, 2000);
-        }).catch(err => {
-            console.error('Erro ao copiar texto: ', err);
-            alert('Não foi possível copiar o texto.');
-        });
-    }
-    
-    async function gerarPdfClientSide() {
-        const dados = obterDadosCalculados();
-        const camposObrigatorios = {
-            "Nome do Empreendimento": dados.nomeEmpreendimento,
-            "Tipo Unidade": dados.tipoUnidade,
-            "Área Privativa": dados.areaPrivativa,
-            "Valor do Imóvel": dados.valorTotal
-        };
-        for (const [nomeCampo, valorCampo] of Object.entries(camposObrigatorios)) {
-            if (!valorCampo || (nomeCampo === "Valor do Imóvel" && valorCampo === 0)) {
-                alert(`Por favor, preencha o campo obrigatório: ${nomeCampo}`);
-                return;
-            }
-        }
-        const totalPercSpan = document.getElementById('totalPerc');
-        if (totalPercSpan && totalPercSpan.innerText !== '100.00%') {
-            alert("A soma das porcentagens das parcelas deve ser exatamente 100%.");
-            return;
-        }
+    async function criarDocumentoPdf(dados) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         try {
@@ -371,10 +319,8 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
         } catch (error) {
             console.error("Erro ao carregar o logo.", error);
         }
-        const dataFormatada = dados.dataProposta ? dados.dataProposta.split('-').reverse().join('/') : 'Não informado';
-        doc.setFontSize(18);
-        doc.text("Proposta de Pagamento", 14, 22);
-        doc.setFontSize(11);
+        const dataFormatada = dados.dataProposta ? dados.dataProposta.split('-').reverse().join('/') : new Date().toLocaleDateString('pt-BR');
+        doc.setFontSize(18); doc.text("Proposta de Pagamento", 14, 22); doc.setFontSize(11);
         doc.text(`Empreendimento: ${dados.nomeEmpreendimento || 'Não informado'}`, 14, 32);
         doc.text(`Unidade: ${dados.tipoUnidade || 'Não informado'}`, 14, 38);
         doc.text(`Área Privativa: ${dados.areaPrivativa ? dados.areaPrivativa + ' m²' : 'Não informado'}`, 14, 44);
@@ -382,59 +328,193 @@ input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
         doc.text(`Cliente: ${dados.nomeCliente || 'Não informado'}`, 14, 58);
         doc.text(`Data: ${dataFormatada}`, 14, 64);
         const tabelaHead = [["PARCELAS", "QTDE", "VALOR PARCELA", "SUBTOTAL"]];
-        const tabelaBody = dados.parcelas.map(p => [
-            p.nome,
-            p.qtde,
-            `R$ ${p.valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
-            `R$ ${p.subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-        ]);
-        doc.autoTable({
-            head: tabelaHead, body: tabelaBody, startY: 72, theme: 'grid', headStyles: { fillColor: [4, 40, 70] }
-        });
-        const finalY = doc.lastAutoTable.finalY;
-        const totalGeralTexto = dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text(`Valor no Fluxo: ${totalGeralTexto}`, 14, finalY + 10);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text(`Executivo(a): ${dados.nomeExecutivo || 'Não informado'}`, 14, finalY + 16);
-        doc.save(`Fluxo de Pagamento - ${dados.nomeCliente || dados.nomeEmpreendimento || 'simulacao'}.pdf`);
+        const tabelaBody = dados.parcelas.map(p => [ p.nome, p.qtde, p.valorParcela.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), p.subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) ]);
+        doc.autoTable({ head: tabelaHead, body: tabelaBody, startY: 72, theme: 'grid', headStyles: { fillColor: [4, 40, 70] } });
+        const finalY = doc.lastAutoTable.finalY; const totalGeralTexto = dados.totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.text(`Valor no Fluxo: ${totalGeralTexto}`, 14, finalY + 10);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text(`Executivo(a): ${dados.nomeExecutivo || 'Não informado'}`, 14, finalY + 16);
+        return doc;
     }
 
-    function atualizarTotalPerc() {
-        const spanTotalPerc = document.getElementById('totalPerc');
-        const btnCalcular = document.getElementById('btn-calcular');
-        let totalPerc = 0;
-        document.querySelectorAll('.perc-input').forEach(input => {
-            totalPerc += parseFloat(input.value) || 0;
-        });
-        if (spanTotalPerc) {
-            spanTotalPerc.innerText = totalPerc.toFixed(2) + "%";
-            const isTotal100 = totalPerc.toFixed(2) === '100.00';
-            spanTotalPerc.className = isTotal100 ? 'valido' : 'invalido';
+    function validarCampos(dados, checarIdNegocio = false) {
+        if (!dados.nomeEmpreendimento || !dados.tipoUnidade || !dados.areaPrivativa || !dados.valorTotal) {
+            mostrarNotificacao("Preencha os campos obrigatórios: Empreendimento, Unidade, Área e Valor.", 'error');
+            return false;
         }
-        if (btnCalcular) {
-            const isTotal100 = totalPerc.toFixed(2) === '100.00';
-            btnCalcular.disabled = !isTotal100;
+        if (document.getElementById('totalPerc').textContent !== '100.00%') {
+            mostrarNotificacao("A soma das porcentagens das parcelas deve ser 100%.", 'error');
+            return false;
+        }
+        if (checarIdNegocio && !document.getElementById('bitrixDealId').value) {
+            mostrarNotificacao("Por favor, insira o ID do Negócio do Bitrix24.", 'error');
+            return false;
+        }
+        return true;
+    }
+
+    async function apenasFazerDownload() {
+        const dados = obterDadosCalculados();
+        if (!validarCampos(dados)) return;
+
+        const btnPdf = document.getElementById('btn-gerar-pdf');
+        btnPdf.textContent = 'A Gerar...';
+        btnPdf.disabled = true;
+
+        const doc = await criarDocumentoPdf(dados);
+        doc.save(`FluxoPagamento - ${dados.nomeCliente.replace(/ /g, '_') || 'proposta'} - ${dados.dataProposta}.pdf`);
+
+        btnPdf.textContent = 'Download PDF';
+        btnPdf.disabled = false;
+    }
+
+    async function salvarPdfNoNegocio() {
+        const dados = obterDadosCalculados();
+        if (!validarCampos(dados, true)) return; // true para checar o ID do negócio
+
+        const btnSalvar = document.getElementById('btn-salvar-negocio');
+        btnSalvar.textContent = 'A Gerar e Enviar...';
+        btnSalvar.disabled = true;
+
+        const doc = await criarDocumentoPdf(dados);
+        const dealId = document.getElementById('bitrixDealId').value;
+        const linkWebhook = "https://midrah.bitrix24.com.br/rest/8425/64q171jcgecefxfa/"; 
+        const CampoId = "UF_CRM_1755806050";
+        const nomeArquivo = `FluxoPagamento - ${dados.nomeCliente.replace(/ /g, '_') || 'proposta'} - ${dados.dataProposta}.pdf`;
+        const pdfBase64 = doc.output('datauristring').substring(doc.output('datauristring').indexOf(',') + 1);
+        
+        const params = new URLSearchParams();
+        params.append('ID', dealId);
+        params.append(`FIELDS[${CampoId}][fileData][0]`, nomeArquivo);
+        params.append(`FIELDS[${CampoId}][fileData][1]`, pdfBase64);
+        
+        try {
+            const response = await fetch(linkWebhook + 'crm.deal.update', { method: 'POST', body: params });
+            const result = await response.json();
+            if (result.error) { throw new Error(result.error_description); }
+            mostrarNotificacao(`PDF enviado com sucesso para o negócio ID: ${dealId}!`, 'success');
+        } catch (error) {
+            console.error("Erro no envio para o Bitrix:", error);
+            mostrarNotificacao(`Erro ao enviar: ${error.message}`, 'error');
+        } finally {
+            btnSalvar.textContent = 'Salvar PDF no Negócio';
+            btnSalvar.disabled = false;
         }
     }
 
-    setTimeout(function() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('dataProposta').value = today;
-        document.getElementById('btn-calcular')?.addEventListener('click', calcularFluxo);
-        document.getElementById('btn-gerar-pdf')?.addEventListener('click', gerarPdfClientSide);
+/**
+ * Formata os dados como texto otimizado para WhatsApp (COM ESPAÇAMENTO FORÇADO) e copia.
+ */
+function copiarTextoProposta() {
+    const dados = obterDadosCalculados();
+    if (dados.totalGeral === 0) {
+        return mostrarNotificacao("Calcule um fluxo antes de copiar.", 'error');
+    }
+
+    /**
+     * Função auxiliar fiável para formatar datas como "ago/25".
+     * @param {Date} data - O objeto de data a ser formatado.
+     * @returns {string} A data formatada.
+     */
+    function formatarDataMesAno(data) {
+        const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+        const mes = meses[data.getMonth()];
+        const ano = data.getFullYear().toString().slice(-2);
+        return `${mes}/${ano}`;
+    }
+
+    const dataFormatada = dados.dataProposta ? new Date(dados.dataProposta + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+
+    let textoParaCopiar = `Nome Empreendimento: ${dados.nomeEmpreendimento}\n`;
+    textoParaCopiar += `Tipo Unidade: ${dados.tipoUnidade}\n`;
+    textoParaCopiar += `Área Privativa (m²): ${dados.areaPrivativa}\n`;
+    textoParaCopiar += `Nome do Cliente: ${dados.nomeCliente || ''}\n`;
+    textoParaCopiar += `Data da Proposta: ${dataFormatada}\n\n`;
+
+    textoParaCopiar += "📍 *Fluxo:*\n";
+
+    const dataInicial = new Date(dados.dataProposta + 'T00:00:00');
+    let dataCorrente = new Date(dataInicial);
+
+    let totalInvestido = 0;
+    let valorFinanciado = 0;
+    const contadores = {};
+    const emojis = {
+        'Ato': '💰', 'Sinal': '💰', 'Mensais': '📅',
+        'Anual': '📅', 'Unica': '🔑', 'Financiamento': '🔄'
+    };
+
+    dados.parcelas.forEach(p => {
+        if (p.nome.toLowerCase() === 'financiamento') {
+            valorFinanciado = p.subtotal;
+            return;
+        }
+
+        totalInvestido += p.subtotal;
+        
+        const emoji = emojis[p.nome] || '➡️';
+        let infoData = '';
+        
+        contadores[p.nome] = (contadores[p.nome] || 0) + 1;
+        let nomeExibicao = p.nome;
+        if (p.qtde > 1 && contadores[p.nome] > 1 || (p.nome.toLowerCase() === 'anual')) {
+             nomeExibicao = `${contadores[p.nome]}ª ${p.nome}`;
+        }
+
+        const dataInicio = new Date(dataCorrente);
+        let valorExibido;
+
+        if (p.qtde > 1) {
+            let dataFim = new Date(dataCorrente);
+            dataFim.setMonth(dataFim.getMonth() + p.qtde - 1);
+            
+            // 👇 LINHA CORRIGIDA com o "espaço inquebrável" (\u00A0) 👇
+            infoData = `(${formatarDataMesAno(dataInicio)}\u00A0a\u00A0${formatarDataMesAno(dataFim)}\u00A0–\u00A0${p.qtde}x)`;
+            // NOTA: \u00A0 é o código para um "espaço não separável".
+
+            valorExibido = p.valorParcela;
+        } else {
+            infoData = `(${formatarDataMesAno(dataInicio)})`;
+            valorExibido = p.subtotal;
+        }
+
+        const valorFormatado = valorExibido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        textoParaCopiar += `${emoji} ${nomeExibicao} ${infoData}: ${valorFormatado}\n`;
+
+        dataCorrente.setMonth(dataCorrente.getMonth() + p.qtde);
+    });
+
+    textoParaCopiar += `\n💵 *Total investido:* ${totalInvestido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n`;
+    if (valorFinanciado > 0) {
+        textoParaCopiar += `🔄 *Financiado:* ${valorFinanciado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}\n`;
+    }
+    textoParaCopiar += `💰 *TOTAL GERAL:* ${dados.valorTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+
+    navigator.clipboard.writeText(textoParaCopiar).then(() => {
+        mostrarNotificacao('Texto para WhatsApp copiado!', 'success');
+    }).catch(err => {
+        console.error('Erro ao copiar texto:', err);
+        mostrarNotificacao('Não foi possível copiar o texto.', 'error');
+    });
+}
+
+
+    function init() {
+        document.getElementById('dataProposta').value = new Date().toISOString().split('T')[0];
+        document.getElementById('btn-calcular')?.addEventListener('click', renderizarResultados);
+        document.getElementById('btn-gerar-pdf')?.addEventListener('click', apenasFazerDownload);
         document.getElementById('btn-copiar-texto')?.addEventListener('click', copiarTextoProposta);
-        document.querySelectorAll('.perc-input, .qnt-input, #valorTotal, #areaPrivativa').forEach(input => {
-            input.addEventListener('input', atualizarTotalPerc);
+        document.getElementById('btn-salvar-negocio')?.addEventListener('click', salvarPdfNoNegocio);
+        
+        document.getElementById('simulador-pagamento').addEventListener('input', (event) => {
+            if (event.target.matches('.perc-input, .qnt-input, #valorTotal')) {
+                atualizarTotalPerc();
+            }
         });
         atualizarTotalPerc();
-    }, 500);
-</script>
+    }
 
-</body>
-</html>
+    document.addEventListener('DOMContentLoaded', init);
+</script>
 
 </body>
 </html>
